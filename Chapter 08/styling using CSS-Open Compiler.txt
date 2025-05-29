@@ -1,0 +1,36 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        /* Style all the paragraphs */
+        p {
+            background-color: yellow;
+            color: red; 
+            padding: 7 px;
+        }
+
+        /* Style all elements with class 'special' */
+        .special {
+            color: black; /* Change text color */
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        “This a normal paragraph”
+    </p>
+    <br>   
+
+    <p class="special">
+        “This is a paragraph with class special”
+    </p>
+    <br> 
+
+    <div class="special">
+        “This is a div with class special”
+    </div>
+</body>
+
+</html>

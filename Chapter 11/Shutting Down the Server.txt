@@ -1,0 +1,17 @@
+import { Application } from "jsr:@oak/oak/application";
+
+const app = new Application();
+
+const controller = new AbortController();
+const { signal } = controller;
+
+// Add some middleware using `app.use()`
+
+const listenPromise = app.listen({ port: 8000, signal });
+
+// In order to close the server...
+controller.abort();
+
+// Listen will stop listening for requests and the promise will resolve...
+await listenPromise;
+// and you can do something after the close to shutdown

@@ -1,0 +1,17 @@
+{
+    "id": "<< record id from above >>",
+    "status": "inProgress"
+}
+Expected Response:
+
+{
+    "id": "<< record id >>",
+    "customerName": "Elroy Jetson",
+    "items": [
+        {
+            "size": "medium",
+            "type": "pepperoni"
+        }
+    ],
+    "status": "inProgress"
+}

@@ -1,0 +1,13 @@
+
+let mut cmd = Command::new("example_command");
+cmd.arg("arg1").arg("arg2");
+
+// Asynchronously spawn the child process
+let child = cmd.spawn().await.expect("Failed to spawn the process");
+
+// Communicate with the child process's stdin, stdout, and stderr asynchronously
+let child_stdin = child.stdin().expect("Failed to open stdin");
+let child_stdout = child.stdout().expect("Failed to open stdout");
+let child_stderr = child.stderr().expect("Failed to open stderr");
+
+// ... Further interactions with the child process ...

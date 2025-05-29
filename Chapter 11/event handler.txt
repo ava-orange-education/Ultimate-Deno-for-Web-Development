@@ -1,0 +1,15 @@
+import { Application } from "jsr:@oak/oak/application";
+
+const app = new Application();
+
+app.addEventListener("error", (evt) => {
+  // Will log the thrown error to the console.
+  console.log(evt.error);
+});
+
+app.use((ctx) => {
+  // Will throw a 500 on every request.
+  ctx.throw(500);
+});
+
+await app.listen({ port: 80 });

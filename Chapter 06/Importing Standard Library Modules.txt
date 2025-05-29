@@ -1,0 +1,11 @@
+import { copy } from "@std/fs";
+import { join } from "@std/path";
+
+await copy("foo.txt", join("dist", "foo.txt"));
+
+Alternatively, you can import modules directly with the jsr: specifier:
+
+import { copy } from "jsr:@std/fs@^1.0.2";
+import { join } from "jsr:@std/path@^1.0.3";
+
+await copy("foo.txt", join("dist", "foo.txt"));

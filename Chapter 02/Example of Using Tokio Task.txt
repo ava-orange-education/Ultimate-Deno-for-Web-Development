@@ -1,0 +1,33 @@
+use tokio::task;
+
+// NON-BLOCKING
+
+let join = task::spawn(async {
+    // ...
+    "hello world!"
+});
+
+// ...
+
+// Await the result of the spawned task.
+let result = join.await?;
+assert_eq!(result, "hello world!");
+
+// BLOCKING
+
+let join = task::spawn_blocking(|| {
+    // do some compute-heavy work or call synchronous code
+    "blocking completed"
+});
+
+let result = join.await?;
+assert_eq!(result, "blocking completed");
+
+// BLOCK IN PLACE
+
+let result = task::block_in_place(|| {
+    // do some compute-heavy work or call synchronous code
+    "blocking completed"
+});
+
+assert_eq!(result, "blocking completed");

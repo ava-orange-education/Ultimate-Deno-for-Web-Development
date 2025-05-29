@@ -1,0 +1,11 @@
+const flags = parseArgs(Deno.args, {
+  boolean: ["help", "color"],
+  string: ["version"],
+  default: { color: true },
+  negatable: ["color"],
+});
+console.log("Wants help?", flags.help);
+console.log("Version:", flags.version);
+console.log("Wants color?:", flags.color);
+The `_` field of the returned object contains all arguments that were not recognized as flags.
+console.log("Other:", flags._);

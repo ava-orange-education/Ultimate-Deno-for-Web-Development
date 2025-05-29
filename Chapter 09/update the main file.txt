@@ -1,0 +1,77 @@
+import { Application, Router } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
+import {
+  CosmosClient,
+  PatchOperation,
+} from 'https://cdn.skypack.dev/@azure/cosmos?dts';
+import { cleanOrder, Order, OrderStatus } from './models.ts';
+import { Status } from 'https://deno.land/std@0.152.0/http/http_status.ts';
+
+//Added the cosmos client here and grab our connection string
+const cosmosClient = new CosmosClient(Deno.env.get('COSMOS_CON_STR') ?? '');
+const cosmosDatabase = cosmosClient.database('ThePizzaFarm');
+const cosmosContainer = cosmosDatabase.container('Orders');
+
+const router = new Router();
+router.get('/', (ctx): void => {
+  ctx.response.body = 'Hello world! Anyone hungry for pizza?';
+});
+
+// Added an endpoint for creating an order
+router.post('/orders', async (ctx) => {
+  const { value } = ctx.request.body({ type: 'json' });
+  const orderBody: Order = cleanOrder(await value);
+  const response = await cosmosContainer.items.create(orderBody);
+  ctx.response.body = { status: 'Added', recordId: response.item.id };
+});
+
+// Added a general orders endpoint for getting all the orders in the system
+router.get('/orders', async (ctx) => {
+  const response = await cosmosContainer.items.readAll();
+  const queryResponse = await response.fetchAll();
+  const rawItems: Order[] = <Order[]>queryResponse.resources;
+  ctx.response.body = rawItems;
+});
+
+// Added an endpoint for updating the orders status as the pizza goes from just
+// being placed to in progress, to out for delivery and finally delivered
+router.patch('/orders/status', async (ctx) => {
+  const { value } = ctx.request.body({ type: 'json' });
+  const statusUpdateBody: { status: OrderStatus; id: string } = await value;
+  const item = cosmosContainer.item(statusUpdateBody.id, statusUpdateBody.id);
+  const updateTransaction: PatchOperation[] = [
+    {
+      op: 'replace',
+      path: '/status',
+      value: statusUpdateBody.status,
+    },
+  ];
+  await item.patch(updateTransaction);
+  const { resource: updatedItem } = await item.read();
+  ctx.response.body = cleanOrder(updatedItem);
+});
+
+// Added the delete endpoint for deleting the order from the system when it is no
+// longer needed.
+router.delete('/orders', async (ctx) => {
+  const id = ctx.request.url.searchParams.get('id');
+  if (!id) {
+    ctx.response.body = {
+      status: 'Id not specified in the search params!',
+    };
+    ctx.response.status = Status.BadRequest;
+    return;
+  }
+  await cosmosContainer.item(id, id).delete();
+  ctx.response.body = {
+    status: 'Deleted',
+  };
+});
+
+const app = new Application();
+app.use(router.routes());
+
+app.addEventListener('listen', (e) =>
+  console.log('Listening on http://localhost:8080')
+);
+
+await app.listen({ port: 8080 });

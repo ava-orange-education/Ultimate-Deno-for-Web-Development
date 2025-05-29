@@ -1,0 +1,16 @@
+import { Application } from "jsr:@oak/oak/application";
+import { Router } from "jsr:@oak/oak/router";
+import { route } from "jsr:@oak/oak/serve";
+
+const app = new Application;
+
+const router = new Router();
+
+router.get("/books/:id", route((req, ctx) => {
+  console.log(ctx.params.id);
+  return Response.json({ title: "hello world", id: ctx.params.id });
+}));
+
+app.use(router.routes());
+
+app.listen();

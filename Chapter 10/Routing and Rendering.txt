@@ -1,0 +1,53 @@
+import { router } from "https://crux.land/router@0.0.11";
+import { h, ssr } from "https://crux.land/nanossr@0.0.4";
+
+const render = (component) => ssr(() => <App>{component}</App>);
+
+Deno.serve(router(
+  {
+    "/": () => render(<Home />),
+    "/about": () => render(<About />),
+  },
+));
+
+function App({ children }) {
+  return (
+    <div>
+      <NavBar />
+      {children}
+    </div>
+  );
+}
+
+function NavBar() {
+  return (
+    <nav>
+      <div>
+        <a href="/">
+          Home
+        </a>
+      </div>
+      <div>
+        <a href="/about">
+          About
+        </a>
+      </div>
+    </nav>
+  );
+}
+
+function Home() {
+  return (
+    <div>
+      <span>Home</span>
+    </div>
+  );
+}
+
+function About() {
+  return (
+    <div>
+      <span>About</span>
+    </div>
+  );
+}

@@ -1,0 +1,16 @@
+{
+    "customerName": "Elroy Jetson",
+    "items": [
+        {
+            "size": "medium",
+            "type": "pepperoni"
+        }
+    ],
+    "status": "placed"
+}
+Expected Response:
+
+{
+    "status": "Added",
+    "recordId": "<<record id will be here>>"
+}

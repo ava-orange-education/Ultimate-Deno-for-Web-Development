@@ -1,0 +1,14 @@
+import { Application } from "jsr:@oak/oak/application";
+import { getEntity } from "jsr:@oak/oak/etag";
+import { calculate } from "jsr:@std/http/etag";
+
+const app = new Application();
+
+// The context.response.body has already been set...
+
+app.use(async (ctx) => {
+  const entity = await getEntity(ctx);
+  if (entity) {
+    const etag = await calculate(entity);
+  }
+});

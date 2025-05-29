@@ -1,0 +1,14 @@
+[
+    {
+        "id": "<< same record id from above will be here >>",
+        "customerName": "Elroy Jetson",
+        "items": [
+            {
+                "size": "medium",
+                "type": "pepperoni"
+            }
+        ],
+        "status": "placed",
+        .... azure cosmos fields ....
+    }
+]

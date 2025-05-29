@@ -1,0 +1,9 @@
+import { Application } from "jsr:@oak/oak/application";
+import { serve } from "jsr:@oak/oak/serve";
+
+const app = new Application();
+
+app.use(serve((req, ctx) => {
+  console.log(req.url);
+  return new Response("Hello world!");
+}));

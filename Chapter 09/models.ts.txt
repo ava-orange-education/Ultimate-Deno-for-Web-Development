@@ -1,0 +1,40 @@
+export enum Size {
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
+}
+
+export enum PizzaType {
+  Cheese = 'cheese',
+  Pepperoni = 'pepperoni',
+  Sausage = 'sausage',
+  Hawaiian = 'hawaiian',
+}
+
+export enum OrderStatus {
+  Placed = 'placed',
+  InProgress = 'inProgress',
+  OutForDelivery = 'outForDelivery',
+  Delivered = 'delivered',
+}
+
+export interface PizzaItem {
+  size: Size;
+  type: PizzaType;
+}
+
+export interface Order {
+  id?: string;
+  customerName: string;
+  items: PizzaItem[];
+  status: OrderStatus;
+}
+
+export function cleanOrder(order: Order): Order {
+  return {
+    id: order.id,
+    customerName: order.customerName,
+    items: order.items,
+    status: order.status,
+  };
+}

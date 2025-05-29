@@ -1,0 +1,29 @@
+pub async fn op_net_connect_tcp<NP>(
+  state: Rc<RefCell<OpState>>,
+  addr: IpAddr,
+) -> Result<(ResourceId, IpAddr, IpAddr), AnyError>
+where
+  NP: NetPermissions + 'static,
+{
+  {
+    let mut state_ = state.borrow_mut();
+    state_
+      .borrow_mut::<NP>()
+      .check_net(&(&addr.hostname, Some(addr.port)), "Deno.connect()")?;
+  }
+
+  let addr = resolve_addr(&addr.hostname, addr.port)
+    .await?
+    .next()
+    .ok_or_else(|| generic_error("No resolved address found"))?;
+  let tcp_stream = TcpStream::connect(&addr).await?;
+  let local_addr = tcp_stream.local_addr()?;
+  let remote_addr = tcp_stream.peer_addr()?;
+
+  let mut state_ = state.borrow_mut();
+  let rid = state_
+    .resource_table
+    .add(TcpStreamResource::new(tcp_stream.into_split()));
+
+  Ok((rid, IpAddr::from(local_addr), IpAddr::from(remote_addr)))
+}
